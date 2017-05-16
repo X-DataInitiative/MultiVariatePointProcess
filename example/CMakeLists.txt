@@ -6,6 +6,7 @@ set(ptpack_example_targets
     learning_sparse_standard_hawkes
     learning_standard_hawkes
     fast_simulating_standard_hawkes
+    fast_simulating_multivariate_hawkes
     learning_standard_hawkes_lowrank_constraint
     learning_lowrank_hawkes
     learning_hawkes_with_customized_kernel
@@ -15,6 +16,7 @@ set(ptpack_example_targets
     learning_standard_self_inhibiting_process
     learning_sparse_self_inhibiting_process
     basic_residual_analysis
+    likelihood_multivariate_hawkes
 	)
 
 foreach(ptpack_example_target ${ptpack_example_targets})
