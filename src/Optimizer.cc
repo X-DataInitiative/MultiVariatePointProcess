@@ -227,12 +227,16 @@ void Optimizer::lbfgs(const Eigen::VectorXd& g, const Eigen::MatrixXd& s, const 
 	d = r.col(k);
 }
 
-void Optimizer::PLBFGS(const double& LB, const double& UB)
+void Optimizer::PLBFGS(const double& LB, const double& UB, bool verbose)
 {
 
 	maxIter_ = 10000;
 
-	std::cout << std::setw(10) << "Iteration" << "\t" << std::setw(10) << "FunEvals" << "\t" << std::setw(10) << "Step Length" << "\t" << std::setw(10) << "Function Val" << "\t" << std::setw(10) << "Opt Cond" << std::endl;
+	if (verbose) {
+		std::cout << std::setw(10) << "Iteration" << "\t" << std::setw(10) << "FunEvals" << "\t"
+				  << std::setw(10) << "Step Length" << "\t" << std::setw(10) << "Function Val"
+				  << "\t" << std::setw(10) << "Opt Cond" << std::endl;
+	}
 	unsigned nVars = process_->GetParameters().size();
 
 	Eigen::VectorXd x = (Eigen::VectorXd::Random(nVars).array() + 1) * 0.5;
@@ -330,12 +334,12 @@ void Optimizer::PLBFGS(const double& LB, const double& UB)
 
 		// Check that Progress can be made along the direction
 		f_old = f;
-		double gtd = g.transpose() * d;
-		if(gtd > -optTol)
-		{
-			std::cout << "Directional Derivative below optTol" << std::endl;
-			break;
-		}
+//		double gtd = g.transpose() * d;
+//		if(gtd > -optTol)
+//		{
+//			std::cout << "Directional Derivative below optTol" << std::endl;
+//			break;
+//		}
 
 		// Select Initial Guess to step length
 		if(i == 1)
@@ -377,7 +381,7 @@ void Optimizer::PLBFGS(const double& LB, const double& UB)
 			}
 
 			// Check whether step has become too small
-			if ((t * d).array().abs().sum() < optTol)
+			if ((t * d).array().abs().sum() < optTol * 1e-4)
 			{
 				std::cout << "Line Search failed" << std::endl;
 
@@ -408,15 +412,22 @@ void Optimizer::PLBFGS(const double& LB, const double& UB)
 		// Check optimality
 		if(working.size() == 0)
 		{
-			std::cout << std::setw(10) << i << "\t" << std::setw(10) << funEvals << "\t" << std::setw(10) << t << "\t" << std::setw(10) << f << "\t" << std::setw(10) <<  0 << std::endl;
+			if (verbose) {
+				std::cout << std::setw(10) << i << "\t" << std::setw(10) << funEvals << "\t"
+						  << std::setw(10) << t << "\t" << std::setw(10) << f << "\t"
+						  << std::setw(10) << 0 << std::endl;
+			}
 			std::cout << "All variables are at their bound and no further progress is possible" << std::endl;
 			break;
 		}else 
 		{
 			igl::slice(g, working, g_working);
 
-			std::cout << std::setw(10) << i << "\t" << std::setw(10) << funEvals << "\t" << std::setw(10) << t << "\t" << std::setw(10) << f << "\t" << std::setw(10) <<  g_working.array().abs().sum() << std::endl;
-
+			if (verbose) {
+				std::cout << std::setw(10) << i << "\t" << std::setw(10) << funEvals << "\t"
+						  << std::setw(10) << t << "\t" << std::setw(10) << f << "\t"
+						  << std::setw(10) << g_working.array().abs().sum() << std::endl;
+			}
 			if(g_working.norm() <= optTol)
 			{
 				std::cout << "All working variables satisfy optimality condition" << std::endl;
@@ -425,15 +436,18 @@ void Optimizer::PLBFGS(const double& LB, const double& UB)
 		}
 
 		// Check for lack of progress
-		if ((t * d).array().abs().sum() < optTol)
+//		if ((t * d).array().abs().sum() < optTol)
+//		{
+//			std::cout << "Step size below optTol" << std::endl;
+//			break;
+//		}
+//
+		if (std::fabs(f - f_old) / f_old< optTol)
 		{
-			std::cout << "Step size below optTol" << std::endl;
-			break;
-		}
-		
-		if (std::fabs(f - f_old) < optTol)
-		{
-			std::cout << "Function value changing by less than optTol" << std::endl;
+
+			if (verbose) {
+				std::cout << "Function value changing by less than optTol : " << optTol << std::endl;
+			}
 			break;	
 		}
 

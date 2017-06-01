@@ -90,7 +90,7 @@ public:
 	Optimizer(IProcess* process) : process_(process)
 	{
 		RNG_.SetState(0, 0);
-		optTol = 1e-10;
+		optTol = 1e-4;
 		maxIter_ = 1000;
 	}
 
@@ -106,7 +106,7 @@ public:
  * @param[in] LB lower bound of the parameters.
  * @param[in] UB upper bound of the parameters.
  */
-	void PLBFGS(const double& LB, const double& UB);
+	void PLBFGS(const double& LB, const double& UB, bool verbose=false);
 /**
  * \brief Proximal method with group lasso type of regularization.
  * @param gamma0       initial learning rate.

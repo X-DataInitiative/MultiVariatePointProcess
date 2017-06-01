@@ -20,6 +20,6 @@ set(ptpack_example_targets
 	)
 
 foreach(ptpack_example_target ${ptpack_example_targets})
-    add_executable(${ptpack_example_target} ${ptpack_example_target}.cc)
+    add_executable(${ptpack_example_target} ${ptpack_example_target}.cc tick_hawkes_data.h)
     target_link_libraries(${ptpack_example_target} ptpack)
 endforeach()

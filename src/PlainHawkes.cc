@@ -382,7 +382,7 @@ void PlainHawkes::fit(const std::vector<Sequence>& data, const OPTION& options)
 					break;
 
 				case PLBFGS:
-					opt.PLBFGS(0, 1e10);
+					opt.PLBFGS(0, 1e10, options.verbose);
 					break;
 			}
 

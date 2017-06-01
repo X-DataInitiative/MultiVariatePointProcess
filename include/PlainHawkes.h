@@ -185,6 +185,8 @@ public:
 		 * Maximum number of iterations.
 		 */
 		unsigned ini_max_iter;
+
+	  	bool verbose;
 	};
 
 protected:
@@ -218,7 +220,7 @@ public:
 /**
  * \brief Maximum likelihood estimation for the model parameters.
  * @param[in] data    vectors of observed sequences.
- * @param[in] options data structure sotring different configuration for the optimization algorithm and the respective regularizations.
+ * @param[in] options data structure sotring different configuration for Pthe optimization algorithm and the respective regularizations.
  */
 	void fit(const std::vector<Sequence>& data, const OPTION& options);
 
