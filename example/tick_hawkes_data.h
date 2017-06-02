@@ -72,6 +72,8 @@ Eigen::MatrixXd get_beta(unsigned int n_nodes) {
         beta(i, j) = 2.;
       } else if (n_nodes == 4) {
         beta(i, j) = 0.5;
+      } else if (n_nodes == 16) {
+        beta(i, j) = 1.;
       }
     }
   }
